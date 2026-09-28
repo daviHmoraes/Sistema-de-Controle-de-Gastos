@@ -1,0 +1,21 @@
+name: Criar issues do MVP
+
+# Roda manualmente: aba Actions > "Criar issues do MVP" > Run workflow
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  criar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Criar labels, milestones e issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash criar-issues.sh
