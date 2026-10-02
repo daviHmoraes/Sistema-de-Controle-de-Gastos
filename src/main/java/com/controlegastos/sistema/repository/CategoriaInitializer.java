@@ -18,7 +18,7 @@ public class CategoriaInitializer implements CommandLineRunner {
         List<String> nomes = List.of("Mercado", "Transporte", "Moradia", "Lazer", "Saúde", "Outros");
 
         for(String nome : nomes) {
-            if(!repository.existsByName(nome)) {
+            if(!repository.existsByNome(nome)) {
                 repository.save(new Categoria(nome));
             }
         }
