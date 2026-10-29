@@ -4,6 +4,10 @@ import com.controlegastos.sistema.dto.gasto.GastoPostRequestDto;
 import com.controlegastos.sistema.dto.gasto.GastoResponseDto;
 import com.controlegastos.sistema.service.GastoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +38,12 @@ public class GastoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GastoResponseDto>> listar(@RequestParam("mes") @DateTimeFormat(pattern = "yyyy-MM") YearMonth mes) {
-        return ResponseEntity.ok(gastoService.listarPorMes(mes));
+    public ResponseEntity<Page<GastoResponseDto>> listar(@RequestParam(value = "mes", required = false) @DateTimeFormat(pattern = "yyyy-MM") YearMonth mes,
+                                                         @PageableDefault(size = 20, sort = {"data", "id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<GastoResponseDto> response = (mes != null) ? gastoService.listarPorMes(mes, pageable) : gastoService.listarTodos(pageable);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
