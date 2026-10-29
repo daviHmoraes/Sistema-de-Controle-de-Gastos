@@ -8,6 +8,8 @@ import com.controlegastos.sistema.exceptions.RecursoNaoEncontradoException;
 import com.controlegastos.sistema.mapper.GastoMapper;
 import com.controlegastos.sistema.repository.CategoriaRepository;
 import com.controlegastos.sistema.repository.GastoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,12 +55,17 @@ public class GastoService {
     }
 
     @Transactional
-    public List<GastoResponseDto> listarPorMes(YearMonth mes) {
+    public Page<GastoResponseDto> listarPorMes(YearMonth mes, Pageable pageable) {
         return gastoRepository
-                .findByDataBetweenOrderByDataDescIdDesc(mes.atDay(1), mes.atEndOfMonth())
-                .stream()
-                .map(gastoMapper::toDto)
-                .toList();
+                .findByDataBetweenOrderByDataDescIdDesc(mes.atDay(1), mes.atEndOfMonth(), pageable)
+                .map(gastoMapper::toDto);
+    }
+
+    @Transactional
+    public Page<GastoResponseDto> listarTodos(Pageable pageable) {
+        return gastoRepository
+                .findAll(pageable)
+                .map(gastoMapper::toDto);
     }
 
     private Gasto buscarGasto(Long id) {
