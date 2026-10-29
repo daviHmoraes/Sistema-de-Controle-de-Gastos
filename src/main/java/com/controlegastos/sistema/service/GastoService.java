@@ -11,6 +11,9 @@ import com.controlegastos.sistema.repository.GastoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
+import java.util.List;
+
 @Service
 public class GastoService {
 
@@ -47,6 +50,15 @@ public class GastoService {
     @Transactional
     public void excluir(Long id) {
         gastoRepository.delete(buscarGasto(id));
+    }
+
+    @Transactional
+    public List<GastoResponseDto> listarPorMes(YearMonth mes) {
+        return gastoRepository
+                .findByDataBetweenOrderByDataDescIdDesc(mes.atDay(1), mes.atEndOfMonth())
+                .stream()
+                .map(gastoMapper::toDto)
+                .toList();
     }
 
     private Gasto buscarGasto(Long id) {
