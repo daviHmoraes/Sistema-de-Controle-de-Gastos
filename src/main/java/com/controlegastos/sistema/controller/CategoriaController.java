@@ -23,7 +23,7 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDto> post(@RequestBody CategoriaPostRequestDto request, ServletRequest servletRequest) {
+    public ResponseEntity<CategoriaResponseDto> post(@RequestBody CategoriaPostRequestDto request) {
         CategoriaResponseDto response = categoriaService.insert(request);
 
         URI location = ServletUriComponentsBuilder
